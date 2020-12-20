@@ -22,10 +22,10 @@ var angles = [
 var pipaAngleIndex = 0
 
 function setup() {
-  createCanvas(1600, 1600);
+  createCanvas(700, 700);
 
   pipaImg = loadImage('assets/pipa.png')
-  pipa = createSprite(300, 1000)
+  pipa = createSprite(450, 450)
   pipa.addImage(pipaImg)
   pipa.rotateToDirection = true
   changePipaDirection(pipa)
