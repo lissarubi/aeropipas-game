@@ -1,6 +1,14 @@
 function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;
 }
+
+const socket = io('http://localhost:3000')
+const clientId = localStorage.getItem('id')
+const room = localStorage.getItem('id')
+
+socket.on('init', handleInit)
+socket.on('gamestate', handleGameState)
+
 var MENU = 0;
 var pipa;
 var passedMenu = false;
@@ -8,15 +16,16 @@ var pipa01img;
 var pipa02img;
 var DKeyPossible = true;
 
-var pipa01 = 'assets/pipa01.png';
-var pipa02 = 'assets/pipa02.png';
-var pipa03 = 'assets/pipa03.png';
-var pipa04 = 'assets/pipa04.png';
-var pipa05 = 'assets/pipa05.png';
-var pipa06 = 'assets/pipa06.png';
-var pipa07 = 'assets/pipa07.png';
-var pipa08 = 'assets/pipa08.png';
-var pipa09 = 'assets/pipa09.png';
+
+var pipa01 = '/assets/pipa01.png';
+var pipa02 = '/assets/pipa02.png';
+var pipa03 = '/assets/pipa03.png';
+var pipa04 = '/assets/pipa04.png';
+var pipa05 = '/assets/pipa05.png';
+var pipa06 = '/assets/pipa06.png';
+var pipa07 = '/assets/pipa07.png';
+var pipa08 = '/assets/pipa08.png';
+var pipa09 = '/assets/pipa09.png';
 
 var speedFromChangedDirection = 2;
 var angles = ['0', '45', '90', '135', '180', '225', '270', '315'];
@@ -53,9 +62,13 @@ function setup() {
   pipa09img.position(19, 301);
 }
 
+var angle
+var speedFromChangedDirection
+
 function changePipaDirection(pipa) {
   pipaAngleIndex = Math.floor(Math.random() * angles.length);
   angle = angles[pipaAngleIndex];
+  socket.emit('keydown', )
 
   speedFromChangedDirection = getRandomArbitrary(2, 4);
   pipa.setSpeed(speedFromChangedDirection, angle);
@@ -120,4 +133,12 @@ function draw() {
     textSize(15);
     textToSelectPipa = text('Escolha sua pipa', 300, 20);
   }
+}
+
+function handleInit(msg){
+  console.log(msg)
+}
+
+function handleGameState(gameState){
+  gameState = JSON.parse(gameState)
 }

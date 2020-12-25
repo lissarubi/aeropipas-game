@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aeropipas Game</title>
-  <script src="../lib/p5.min.js"></script>
-  <script src="../lib/p5.play/lib/p5.play.js"></script>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aeropipas</title>
+    <link rel="stylesheet" href="game02/styles.css">
+  </head>
+  <body>
 
-<script src="game02/game02.js"></script>
-</body>
+    <div class="createRoom roomForm">
+      <h1>Crie uma sala</h1>
+
+      <div class="createRoomForm">
+        <input type="number" name="createRoomNumber" id="createRoomNumber" class="createRoomNumber roomInputNumber"/>
+        <input type="submit" value="Criar Sala" class="inputButton" id="inputButtonCreateRoom" />
+      </div>
+    </div>
+
+    <div class="enterRoom roomForm">
+      <h1>Entre em uma sala</h1>
+      <div>
+        <input type="number" name="enterRoomNumber" id="enterRoomNumber" class="enterRoomNumber roomInputNumber"/>
+        <input type="submit" value="Entrar" class="inputButton" id="inputButtonEnterRoom"/>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.0/socket.io.js"></script>
+  <script src="game02/script.js"></script>
+  </body>
 </html>
