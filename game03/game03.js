@@ -1,38 +1,30 @@
 function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;
 }
-
-const socket = io('http://localhost:3000')
-const clientId = localStorage.getItem('id')
-const room = localStorage.getItem('id')
-
-socket.on('init', handleInit)
-socket.on('gamestate', handleGameState)
-
 var MENU = 0;
 var pipa;
 var passedMenu = false;
 var pipa01img;
 var pipa02img;
 var DKeyPossible = true;
+var bar1;
 
-
-var pipa01 = '/assets/pipa01.png';
-var pipa02 = '/assets/pipa02.png';
-var pipa03 = '/assets/pipa03.png';
-var pipa04 = '/assets/pipa04.png';
-var pipa05 = '/assets/pipa05.png';
-var pipa06 = '/assets/pipa06.png';
-var pipa07 = '/assets/pipa07.png';
-var pipa08 = '/assets/pipa08.png';
-var pipa09 = '/assets/pipa09.png';
+var pipa01 = "assets/pipa01.png";
+var pipa02 = "assets/pipa02.png";
+var pipa03 = "assets/pipa03.png";
+var pipa04 = "assets/pipa04.png";
+var pipa05 = "assets/pipa05.png";
+var pipa06 = "assets/pipa06.png";
+var pipa07 = "assets/pipa07.png";
+var pipa08 = "assets/pipa08.png";
+var pipa09 = "assets/pipa09.png";
 
 var speedFromChangedDirection = 2;
-var angles = ['0', '45', '90', '135', '180', '225', '270', '315'];
+var angles = ["0", "45", "90", "135", "180", "225", "270", "315"];
 var pipaAngleIndex = 0;
 
 function setup() {
-  createCanvas(700, 700);
+  createCanvas(1000, 700);
 
   pipa01img = createImg(pipa01);
   pipa01img.position(19, 39);
@@ -62,30 +54,42 @@ function setup() {
   pipa09img.position(19, 301);
 }
 
-var angle
-var speedFromChangedDirection
-
 function changePipaDirection(pipa) {
   pipaAngleIndex = Math.floor(Math.random() * angles.length);
   angle = angles[pipaAngleIndex];
-  socket.emit('keydown', )
 
   speedFromChangedDirection = getRandomArbitrary(2, 4);
   pipa.setSpeed(speedFromChangedDirection, angle);
 }
 
+function changeBarDirection() {
+  sideY = Math.random() >= 0.5 ? 500 : 200;
+  vel = getRandomArbitrary(10, 15);
+  bar1.position.y = sideY;
+  bar1.setSpeed(vel, 180);
+  setTimeout(() => {
+    bar1.setSpeed(0, 0);
+    bar1.position.y = sideY;
+    bar1.position.x = 1100;
+  }, 3000);
+}
+
 function mousePressed(e) {
-  targetSrcURL = new URL(e.target.src)
-  console.log(targetSrcURL.pathname)
-  if (targetSrcURL.pathname.includes('assets/pipa')) {
+  targetSrcURL = new URL(e.target.src);
+  if (targetSrcURL.pathname.includes("assets/pipa")) {
     pipaImg = loadImage(targetSrcURL.pathname);
     pipa = createSprite(450, 450);
     pipa.addImage(pipaImg);
     pipa.rotateToDirection = true;
+    bar1 = createSprite(1100, 200);
+    bar1.addImage(loadImage("assets/game02/bar2.png"));
     changePipaDirection(pipa);
+    setTimeout(() => {
+      changeBarDirection();
 
-    setInterval(() => {
-      changePipaDirection(pipa);
+      setInterval(() => {
+        changeBarDirection();
+      }, 4000);
     }, 4000);
   }
 
@@ -97,30 +101,35 @@ function draw() {
   fill(0);
   drawSprites();
 
-
   if (passedMenu == true) {
-    pipa01img.remove()
-    pipa02img.remove()
-    pipa03img.remove()
-    pipa04img.remove()
-    pipa05img.remove()
-    pipa06img.remove()
-    pipa07img.remove()
-    pipa08img.remove()
-    pipa09img.remove()
+    pipa01img.remove();
+    pipa02img.remove();
+    pipa03img.remove();
+    pipa04img.remove();
+    pipa05img.remove();
+    pipa06img.remove();
+    pipa07img.remove();
+    pipa08img.remove();
+    pipa09img.remove();
 
-    if (pipa.position.x >= 700 || pipa.position.y >= 700){
-      pipa.remove()
-      alert('Você Perdeu a sua pipa!')
-      window.location.reload()
+    pipa.collide(bar1);
+
+    if (
+      pipa.position.x >= 1000 ||
+      pipa.position.y >= 700 ||
+      pipa.position.y <= 0 ||
+      pipa.position.x <= 0
+    ) {
+      pipa.remove();
+      alert("Você Perdeu a sua pipa!");
+      window.location.reload();
     }
 
-    if (!keyWentDown('Space')) {
-      DKeyPossible = true
+    if (!keyWentDown("Space")) {
+      DKeyPossible = true;
       pipa.setSpeed(speedFromChangedDirection, angles[pipaAngleIndex]);
-    }
-    else if (DKeyPossible){
-      DKeyPossible = false
+    } else if (DKeyPossible) {
+      DKeyPossible = false;
       speed = pipa.getSpeed();
       pipa.setSpeed(0.4, angles[pipaAngleIndex]);
       if (pipaAngleIndex == angles.length) {
@@ -129,16 +138,8 @@ function draw() {
         pipaAngleIndex++;
       }
     }
-  }else{
+  } else {
     textSize(15);
-    textToSelectPipa = text('Escolha sua pipa', 300, 20);
+    textToSelectPipa = text("Escolha sua pipa", 300, 20);
   }
-}
-
-function handleInit(msg){
-  console.log(msg)
-}
-
-function handleGameState(gameState){
-  gameState = JSON.parse(gameState)
 }

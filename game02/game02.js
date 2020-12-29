@@ -7,6 +7,7 @@ var passedMenu = false;
 var pipa01img;
 var pipa02img;
 var DKeyPossible = true;
+var bar1;
 
 var pipa01 = "assets/pipa01.png";
 var pipa02 = "assets/pipa02.png";
@@ -17,13 +18,14 @@ var pipa06 = "assets/pipa06.png";
 var pipa07 = "assets/pipa07.png";
 var pipa08 = "assets/pipa08.png";
 var pipa09 = "assets/pipa09.png";
+var bar1Img = "assets/game02/bar1.png";
 
 var speedFromChangedDirection = 2;
 var angles = ["0", "45", "90", "135", "180", "225", "270", "315"];
 var pipaAngleIndex = 0;
 
 function setup() {
-  createCanvas(700, 700);
+  createCanvas(1000, 700);
 
   pipa01img = createImg(pipa01);
   pipa01img.position(19, 39);
@@ -61,18 +63,34 @@ function changePipaDirection(pipa) {
   pipa.setSpeed(speedFromChangedDirection, angle);
 }
 
+function changeBarDirection() {
+  side = Math.random() >= 0.5 ? 800 : 210;
+  console.log(side);
+  bar1.position.x = side;
+  bar1.setSpeed(10, -90);
+  setTimeout(() => {
+    bar1.setSpeed(0, 0);
+    bar1.position.x = side;
+    bar1.position.y = 1100;
+  }, 3000);
+}
+
 function mousePressed(e) {
   targetSrcURL = new URL(e.target.src);
-  console.log(targetSrcURL.pathname);
   if (targetSrcURL.pathname.includes("assets/pipa")) {
     pipaImg = loadImage(targetSrcURL.pathname);
     pipa = createSprite(450, 450);
     pipa.addImage(pipaImg);
     pipa.rotateToDirection = true;
+    bar1 = createSprite(200, 1100);
+    bar1.addImage(loadImage("assets/game02/bar1.png"));
     changePipaDirection(pipa);
+    setTimeout(() => {
+      changeBarDirection();
 
-    setInterval(() => {
-      changePipaDirection(pipa);
+      setInterval(() => {
+        changeBarDirection();
+      }, 4000);
     }, 4000);
   }
 
@@ -95,9 +113,10 @@ function draw() {
     pipa08img.remove();
     pipa09img.remove();
 
-    console.log(pipa.position.y);
+    pipa.collide(bar1);
+
     if (
-      pipa.position.x >= 700 ||
+      pipa.position.x >= 1000 ||
       pipa.position.y >= 700 ||
       pipa.position.y <= 0 ||
       pipa.position.x <= 0
