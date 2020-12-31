@@ -7,17 +7,18 @@ var passedMenu = false;
 var pipa01img;
 var pipa02img;
 var DKeyPossible = true;
-var bar1;
+var bar2;
 
-var pipa01 = "assets/pipa01.png";
-var pipa02 = "assets/pipa02.png";
-var pipa03 = "assets/pipa03.png";
-var pipa04 = "assets/pipa04.png";
-var pipa05 = "assets/pipa05.png";
-var pipa06 = "assets/pipa06.png";
-var pipa07 = "assets/pipa07.png";
-var pipa08 = "assets/pipa08.png";
-var pipa09 = "assets/pipa09.png";
+var pipa01 = "https://raw.githubusercontent.com/edersonferreira/aeropipas-game/main/assets/pipa01.png";
+var pipa02 = "https://raw.githubusercontent.com/edersonferreira/aeropipas-game/main/assets/pipa02.png";
+var pipa03 = "https://raw.githubusercontent.com/edersonferreira/aeropipas-game/main/assets/pipa03.png";
+var pipa04 = "https://raw.githubusercontent.com/edersonferreira/aeropipas-game/main/assets/pipa04.png";
+var pipa05 = "https://raw.githubusercontent.com/edersonferreira/aeropipas-game/main/assets/pipa05.png";
+var pipa06 = "https://raw.githubusercontent.com/edersonferreira/aeropipas-game/main/assets/pipa06.png";
+var pipa07 = "https://raw.githubusercontent.com/edersonferreira/aeropipas-game/main/assets/pipa07.png";
+var pipa08 = "https://raw.githubusercontent.com/edersonferreira/aeropipas-game/main/assets/pipa08.png";
+var pipa09 = "https://raw.githubusercontent.com/edersonferreira/aeropipas-game/main/assets/pipa09.png";
+var bar2Img = "https://raw.githubusercontent.com/edersonferreira/aeropipas-game/main/assets/game02/bar2.png"
 
 var speedFromChangedDirection = 2;
 var angles = ["0", "45", "90", "135", "180", "225", "270", "315"];
@@ -65,24 +66,26 @@ function changePipaDirection(pipa) {
 function changeBarDirection() {
   sideY = Math.random() >= 0.5 ? 500 : 200;
   vel = getRandomArbitrary(10, 15);
-  bar1.position.y = sideY;
-  bar1.setSpeed(vel, 180);
+  bar2.position.y = sideY;
+  bar2.setSpeed(vel, 180);
   setTimeout(() => {
-    bar1.setSpeed(0, 0);
-    bar1.position.y = sideY;
-    bar1.position.x = 1100;
+    bar2.setSpeed(0, 0);
+    bar2.position.y = sideY;
+    bar2.position.x = 1100;
   }, 3000);
 }
 
 function mousePressed(e) {
   targetSrcURL = new URL(e.target.src);
   if (targetSrcURL.pathname.includes("assets/pipa")) {
-    pipaImg = loadImage(targetSrcURL.pathname);
+    targetURL = targetSrcURL.pathname.replace("/edersonferreira/aeropipas-game/main/assets/", "https://raw.githubusercontent.com/edersonferreira/aeropipas-game/main/assets/")
+    pipaImg = loadImage(targetURL);
+
     pipa = createSprite(450, 450);
     pipa.addImage(pipaImg);
     pipa.rotateToDirection = true;
-    bar1 = createSprite(1100, 200);
-    bar1.addImage(loadImage("assets/game02/bar2.png"));
+    bar2 = createSprite(1100, 200);
+    bar2.addImage(loadImage(bar2Img));
     changePipaDirection(pipa);
     setTimeout(() => {
       changeBarDirection();
@@ -112,7 +115,7 @@ function draw() {
     pipa08img.remove();
     pipa09img.remove();
 
-    pipa.collide(bar1);
+    pipa.collide(bar2);
 
     if (
       pipa.position.x >= 1000 ||
